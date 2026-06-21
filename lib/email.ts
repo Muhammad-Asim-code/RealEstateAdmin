@@ -91,3 +91,32 @@ export async function sendVisitRescheduleEmail(
     return { success: false, error: error.message };
   }
 }
+
+export async function sendOtpEmail(toEmail: string, otp: string) {
+  const msg = {
+    to: toEmail,
+    from: process.env.SENDGRID_FROM_EMAIL || '',
+    subject: 'Your verification code',
+    text: `Your verification code is: ${otp}`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
+        <h2 style="color: #2563eb;">Verification Code</h2>
+        <p>Your verification code is:</p>
+        <div style="font-size: 24px; font-weight: bold; background:#f1f5f9; padding:12px; display:inline-block; border-radius:6px">${otp}</div>
+        <p style="margin-top:16px">Enter this code to verify your account.</p>
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+        <p style="font-size: 12px; color: #64748b; margin-bottom: 0;">This is an automated message from the Real Estate Admin Dashboard.</p>
+      </div>
+    `,
+  };
+
+  try {
+    await sgMail.send(msg);
+    console.log(`OTP email sent to ${toEmail}`);
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error sending OTP email:', error);
+    if (error.response) console.error(error.response.body);
+    return { success: false, error: error.message };
+  }
+}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Home, PlusCircle, Settings, LogOut, User } from 'lucide-react';
+import { LayoutDashboard, Home, PlusCircle, Settings, LogOut, User, Mail } from 'lucide-react';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -11,6 +11,7 @@ const Sidebar = () => {
     { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { label: 'Properties', href: '/dashboard/properties', icon: Home },
     { label: 'Visit Requests', href: '/dashboard/visit-requests', icon: Settings },
+    { label: 'Contacts', href: '/dashboard/contacts', icon: Mail },
     { label: 'User Profiles', href: '/dashboard/profiles', icon: User },
     // { label: 'Add Property', href: '/dashboard/add-property', icon: PlusCircle },
   ];
@@ -40,17 +41,6 @@ const Sidebar = () => {
           );
         })}
       </nav>
-
-      <div className="p-4 border-t border-slate-800">
-        <Link href="/dashboard/settings" className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-          <Settings size={20} />
-          <span>Settings</span>
-        </Link>
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-red-900/20 hover:text-red-400 rounded-lg transition-colors mt-2 text-left">
-          <LogOut size={20} />
-          <span>Logout</span>
-        </button>
-      </div>
     </div>
   );
 };

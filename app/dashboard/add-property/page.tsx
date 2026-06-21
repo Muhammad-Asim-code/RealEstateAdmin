@@ -11,6 +11,12 @@ export default function AddPropertyPage() {
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [features, setFeatures] = useState<string[]>(['']);
+  const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  function showNotification(type: 'success' | 'error', message: string) {
+    setNotification({ type, message });
+    window.setTimeout(() => setNotification(null), 4000);
+  }
 
   // Form states
   const [formData, setFormData] = useState({
@@ -123,11 +129,11 @@ export default function AddPropertyPage() {
         if (imgTableError) throw imgTableError;
       }
 
-      alert('Property listed successfully!');
+      showNotification('success', 'Property listed successfully!');
       router.push('/dashboard');
     } catch (error: any) {
       console.error('Error:', error.message);
-      alert('Error adding property: ' + error.message);
+      showNotification('error', 'Error adding property: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -186,7 +192,7 @@ export default function AddPropertyPage() {
                 required
                 type="text" 
                 placeholder="e.g. Luxury Villa with Pool" 
-                className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+                className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -196,7 +202,7 @@ export default function AddPropertyPage() {
                   name="status"
                   value={formData.status}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 >
                   <option>For Sale</option>
                   <option>For Rent</option>
@@ -208,7 +214,7 @@ export default function AddPropertyPage() {
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 >
                   <option>House</option>
                   <option>Office</option>
@@ -227,7 +233,7 @@ export default function AddPropertyPage() {
                 required
                 type="number" 
                 placeholder="0.00" 
-                className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+                className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -239,7 +245,7 @@ export default function AddPropertyPage() {
                   onChange={handleInputChange}
                   type="number" 
                   placeholder="2024" 
-                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+                  className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
                 />
               </div>
               <div className="space-y-2">
@@ -250,7 +256,7 @@ export default function AddPropertyPage() {
                   onChange={handleInputChange}
                   type="number" 
                   placeholder="0" 
-                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+                  className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
                 />
               </div>
             </div>
@@ -262,7 +268,7 @@ export default function AddPropertyPage() {
                   value={formData.bedrooms}
                   onChange={handleInputChange}
                   type="number" 
-                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+                  className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
                 />
               </div>
               <div className="space-y-2">
@@ -272,7 +278,7 @@ export default function AddPropertyPage() {
                   value={formData.bathrooms}
                   onChange={handleInputChange}
                   type="number" 
-                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+                  className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
                 />
               </div>
               <div className="space-y-2">
@@ -282,7 +288,7 @@ export default function AddPropertyPage() {
                   value={formData.sqft}
                   onChange={handleInputChange}
                   type="number" 
-                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+                  className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
                 />
               </div>
             </div>
@@ -305,7 +311,7 @@ export default function AddPropertyPage() {
                 required
                 type="text" 
                 placeholder="Enter city" 
-                className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+                className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
               />
             </div>
             <div className="space-y-2">
@@ -317,7 +323,7 @@ export default function AddPropertyPage() {
                 required
                 rows={3} 
                 placeholder="Full street address, postal code, etc." 
-                className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+                className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
               ></textarea>
             </div>
           </div>
@@ -346,7 +352,7 @@ export default function AddPropertyPage() {
                   value={feature}
                   onChange={(e) => updateFeature(idx, e.target.value)}
                   placeholder={`Feature ${idx + 1} (e.g. Free Wi-Fi, Gym)`} 
-                  className="flex-1 px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+                  className="flex-1 px-4 py-2 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
                 />
                 <button 
                   type="button"
@@ -372,7 +378,7 @@ export default function AddPropertyPage() {
             onChange={handleInputChange}
             rows={6} 
             placeholder="Describe the property in detail. Highlight unique selling points..." 
-            className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+            className="w-full px-4 py-2 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
           ></textarea>
         </section>
 
@@ -390,14 +396,13 @@ export default function AddPropertyPage() {
               </>
             ) : "Publish Property"}
           </button>
-          <button 
-            type="button" 
-            className="px-8 bg-slate-100 text-slate-600 font-semibold py-4 rounded-xl hover:bg-slate-200 transition-all border border-slate-200"
-          >
-            Save as Draft
-          </button>
         </div>
       </form>
+      {notification && (
+        <div className={`fixed bottom-4 right-4 p-4 rounded-lg shadow-lg text-white max-w-sm z-50 ${notification.type === 'success' ? 'bg-green-600' : 'bg-red-600'}`}>
+          {notification.message}
+        </div>
+      )}
     </div>
   );
 }

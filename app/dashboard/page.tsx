@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { LayoutDashboard, Home, Key, Loader2, MoreVertical, Search, Filter } from 'lucide-react';
+import { LayoutDashboard, Home, Key, Loader2, MoreVertical, Search, Filter, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 
 interface Property {
@@ -14,11 +14,12 @@ interface Property {
   city: string;
   created_at: string;
   property_images: { url: string }[];
+  sold_prize?: number | null;
 }
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({ total: 0, sale: 0, rent: 0 });
+  const [stats, setStats] = useState({ total: 0, sale: 0, rent: 0, totalSales: 0 });
   const [recentProperties, setRecentProperties] = useState<Property[]>([]);
 
   useEffect(() => {
@@ -40,7 +41,8 @@ export default function Dashboard() {
         const total = properties.length;
         const sale = properties.filter(p => p.status === 'For Sale').length;
         const rent = properties.filter(p => p.status === 'For Rent').length;
-        setStats({ total, sale, rent });
+        const totalSales = properties.reduce((sum: number, p: any) => sum + (Number(p.sold_prize ?? 0) || 0), 0);
+        setStats({ total, sale, rent, totalSales });
         
         // Sort by date and take recent 5
         const sorted = [...properties].sort((a, b) => 
@@ -73,25 +75,26 @@ export default function Dashboard() {
         </Link>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {[
-          { label: 'Total Properties', value: stats.total, color: 'bg-blue-500', icon: <Home className="text-blue-600" size={20}/> },
-          { label: 'For Sale', value: stats.sale, color: 'bg-green-500', icon: <TagIcon className="text-green-600" size={20}/> },
-          { label: 'For Rent', value: stats.rent, color: 'bg-purple-500', icon: <Key className="text-purple-600" size={20}/> },
-        ].map((stat) => (
-          <div key={stat.label} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 relative overflow-hidden">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm font-medium text-slate-500">{stat.label}</p>
-                <p className="text-3xl font-bold text-slate-900 mt-2">{stat.value}</p>
+            { label: 'Total Properties', value: stats.total, color: 'bg-blue-500', icon: <Home className="text-blue-600" size={20}/> , type: 'number'},
+            { label: 'For Sale', value: stats.sale, color: 'bg-green-500', icon: <TagIcon className="text-green-600" size={20}/> , type: 'number'},
+            { label: 'For Rent', value: stats.rent, color: 'bg-purple-500', icon: <Key className="text-purple-600" size={20}/> , type: 'number'},
+            { label: 'Total Sales', value: stats.totalSales, color: 'bg-rose-500', icon: <DollarSign className="text-rose-600" size={20}/> , type: 'currency'},
+          ].map((stat) => (
+            <div key={stat.label} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 relative overflow-hidden">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="text-sm font-medium text-slate-500">{stat.label}</p>
+                  <p className="text-3xl font-bold text-slate-900 mt-2">{stat.type === 'currency' ? `$${(stat.value || 0).toLocaleString()}` : stat.value}</p>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-lg">
+                  {stat.icon}
+                </div>
               </div>
-              <div className="p-3 bg-slate-50 rounded-lg">
-                {stat.icon}
-              </div>
+              <div className={`absolute bottom-0 left-0 h-1 w-full ${stat.color} opacity-20`}></div>
             </div>
-            <div className={`absolute bottom-0 left-0 h-1 w-full ${stat.color} opacity-20`}></div>
-          </div>
-        ))}
+          ))}
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-200">
